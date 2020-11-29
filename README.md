@@ -4,7 +4,7 @@
 - the example code included shows outputting cloudshell blueprint data per domain
     - run flask server
     - navigate to `http://localhost:8900` to test sanity
-    - navigate to `http://localhost:8900/domain/<domain>` to see blueprints listed per domain
+    - navigate to `http://localhost:8900/<domain>` to see blueprints listed per domain
 
 ### Requirements.txt
   * pywin32, flask, waitress
