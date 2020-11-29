@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from cloudshell.api.cloudshell_api import CloudShellAPISession
-
+import json
+from time import sleep
 
 app = Flask(__name__)
 
@@ -11,30 +12,35 @@ host = "localhost"
 domain = "Global"
 
 
-def get_domain_blueprints(api, domain):
-    """
-    take api session and get blueprint details
-    :param CloudShellAPISession api:
-    :param domain:
-    :return:
-    """
-    return api.GetDomainDetails(domain).Topologies
-
 @app.route('/')
 def sanity():
     return "Cloudshell Demo Service is online!"
 
 
-@app.route("/domain/<domain>")
+@app.route("/<domain>")
 def show_blueprints_per_domain(domain):
+    return render_template('index.html', domain=domain)
+
+
+@app.route("/<domain>/blueprint")
+def get_domain_blueprints(domain):
     """
-    make cloudshell api call to get domain info
-    :param domain:
-    :return:
+    get blueprint data from api and send back as JSON
+    to be consumed by AJAX request from client
     """
-    api = CloudShellAPISession(host=host, username=user, password=password, domain=domain)
-    blueprint_data = get_domain_blueprints(api, domain)
-    return render_template('index.html', blueprints=blueprint_data, domain=domain)
+    # simulate mock command time
+    sleep(3)
+    try:
+        api = CloudShellAPISession(host=host, username=user, password=password, domain=domain)
+        blueprints_data = api.GetDomainDetails(domain).Topologies
+    except Exception as e:
+        exc_msg = "Error occurred making cloudshell api call: {}".format(str(e))
+        response_data = {"msg": exc_msg, "code": 400}
+        json_response_data = json.dumps(response_data)
+        return Response(json_response_data, status=400, mimetype='application/json')
+
+    blueprints_data_dicts = [obj.__dict__ for obj in blueprints_data]
+    return jsonify(blueprints_data_dicts)
 
 
 if __name__ == '__main__':
