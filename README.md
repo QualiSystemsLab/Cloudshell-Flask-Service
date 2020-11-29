@@ -3,8 +3,8 @@
 - The general use case is to have a simple utility server to accept HTTP requests from emails or other clients and run custom api operations against cloudshell
 - the example code included shows outputting cloudshell blueprint data per domain
     - run flask server
-    - navigate to http://localhost:8900 to test sanity
-    - navigate to http://localhost:8900/domain/<domain> to see blueprints listed per domain
+    - navigate to `http://localhost:8900` to test sanity
+    - navigate to `http://localhost:8900/domain/<domain>` to see blueprints listed per domain
 
 ### Requirements.txt
   * pywin32, flask, waitress
